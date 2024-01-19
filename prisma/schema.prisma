@@ -61,6 +61,8 @@ enum force {
   PULL
   LEGS
   HINGE
+  ROTATION
+  CORE
 }
 
 model Exercise {
