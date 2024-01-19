@@ -36,3 +36,50 @@ model Note {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 }
+
+model Exercise {
+  id        String  @id @default(cuid())
+  slug      String  @unique
+  name      String
+  scheme    String? // Reps, Reps x Weight, Time
+  target    Json? // muscle groups
+  equipment String? // body only, barbell, dumbbell, cable, machine
+  mechanic  String? // compound, isolation
+  force     String? // push, push, pull, pull, legs, hinge,
+  Set       Set[]
+}
+
+model Routine {
+  id          String  @id @default(cuid())
+  name        String
+  activity    String? // cardio, strength, hiit, lifting, running
+  description String?
+  sets        Set[]
+}
+
+model Set {
+  id         String   @id @default(cuid())
+  type       String   @default("working") // warmup, working, dropset, fail
+  order      Int
+  time       Int? // seconds
+  reps       Int?
+  weight     Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId String
+  routine    Routine  @relation(fields: [routineId], references: [id])
+  routineId  String
+  Workout    Workout? @relation(fields: [workoutId], references: [id])
+  workoutId  String?
+}
+
+model Workout {
+  id        String   @id @default(cuid())
+  name      String
+  duration  Int
+  activity  String? // cardio, strength, hiit, lifting, running
+  sets      Set[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
