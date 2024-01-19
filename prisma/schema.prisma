@@ -37,15 +37,41 @@ model Note {
   userId String
 }
 
+enum scheme {
+  REPS
+  WEIGHT
+  TIME
+}
+
+enum equipment {
+  BODY
+  BARBELL
+  DUMBBELL
+  CABLE
+  MACHINE
+}
+
+enum mechanic {
+  COMPOUND
+  ISOLATION
+}
+
+enum force {
+  PUSH
+  PULL
+  LEGS
+  HINGE
+}
+
 model Exercise {
-  id        String  @id @default(cuid())
-  slug      String  @unique
+  id        String     @id @default(cuid())
+  slug      String     @unique
   name      String
-  scheme    String? // Reps, Reps x Weight, Time
+  scheme    scheme? // Reps, Reps x Weight, Time
   target    Json? // muscle groups
-  equipment String? // body only, barbell, dumbbell, cable, machine
-  mechanic  String? // compound, isolation
-  force     String? // push, push, pull, pull, legs, hinge,
+  equipment equipment? // body only, barbell, dumbbell, cable, machine
+  mechanic  mechanic? // compound, isolation
+  force     force? // push, push, legs, hinge,
   Set       Set[]
 }
 

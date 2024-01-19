@@ -1,6 +1,7 @@
+import fs from "fs";
+
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import fs from "fs";
 
 const prisma = new PrismaClient();
 
@@ -16,6 +17,8 @@ async function seedExercises() {
   try {
     console.log("Start seeding exercise data...");
 
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exercises.forEach(async (exercise: any) => {
       await prisma.exercise.create({
         data: {
