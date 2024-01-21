@@ -1,10 +1,11 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
+
 import { getExercise } from "~/models/exercise.server";
 
-export const loader = async({ params, request }: LoaderFunctionArgs) => {
-  invariant(params.slug, "slug not found")
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+  invariant(params.slug, "slug not found");
 
   const exercise = await getExercise({ slug: params.slug });
   if (!exercise) {
@@ -14,7 +15,7 @@ export const loader = async({ params, request }: LoaderFunctionArgs) => {
 };
 
 export default function ExerciseDetailsPage() {
-  const { exercise }= useLoaderData<typeof loader>();
+  const { exercise } = useLoaderData<typeof loader>();
 
   return (
     <div>
