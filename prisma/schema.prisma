@@ -16,8 +16,8 @@ model User {
 
   password Password?
   notes    Note[]
-  Routine  Routine[]
-  Workout  Workout[]
+  routines Routine[]
+  workouts Workout[]
 }
 
 model Password {
@@ -76,18 +76,18 @@ model Exercise {
   equipment equipment? // body only, barbell, dumbbell, cable, machine
   mechanic  mechanic? // compound, isolation
   force     force? // push, push, legs, hinge,
-  Set       Set[]
+  sets      Set[]
 }
 
 model Routine {
-  id     String @id @default(cuid())
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
-
+  id          String    @id @default(cuid())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId      String
   name        String
   activity    String? // cardio, strength, hiit, lifting, running
   description String?
   sets        Set[]
+  workouts    Workout[]
 }
 
 model Set {
@@ -101,9 +101,10 @@ model Set {
   updatedAt  DateTime @updatedAt
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
   exerciseId String
+  // Sets have a polymorphic relationship to routines and wokrout
   routine    Routine  @relation(fields: [routineId], references: [id])
   routineId  String
-  Workout    Workout? @relation(fields: [workoutId], references: [id])
+  workout    Workout? @relation(fields: [workoutId], references: [id])
   workoutId  String?
 }
 
@@ -117,4 +118,8 @@ model Workout {
   sets      Set[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Workouts can be based off a routine
+  routine   Routine? @relation(fields: [routineId], references: [id])
+  routineId String?
 }
