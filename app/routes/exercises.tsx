@@ -1,12 +1,13 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
+
 import { getExercises } from "~/models/exercise.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const exercises = await getExercises();
   return json({ exercises });
-}
+};
 
 export default function ExercisesPage() {
   const { exercises } = useLoaderData<typeof loader>();
@@ -26,9 +27,7 @@ export default function ExercisesPage() {
           </button>
         </Form>
       </header>
-      <aside>
-
-      </aside>
+      <aside></aside>
 
       <main className="flex h-full bg-white">
         <div className="h-full w-80 border-r bg-gray-50">
@@ -51,7 +50,7 @@ export default function ExercisesPage() {
                     {exercise.name}
                   </NavLink>
                 </li>
-              )
+              );
             })}
           </ol>
         </div>
