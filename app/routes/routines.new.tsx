@@ -48,6 +48,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function NewRoutinePage() {
   // const actionData = useActionData<typeof action>();
 
+  const [activity, setActivity] = useState<string>("lifting"); // ["Lifting", "Running", "Climbing", "Yoga"
   const [movements, setMovements] = useState<Partial<Movement>[]>([]);
 
   const addSet = () => {
@@ -74,22 +75,35 @@ export default function NewRoutinePage() {
         <div>
           <label>
             <span>Activity: </span>
-            <select name="activity">
-              <option>Climbing</option>
-              <option>Weightlifting</option>
-              <option>Running</option>
-              <option>Yoga</option>
+            <select
+              name="activity"
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setActivity(e.target.value)
+              }
+              defaultValue={activity}
+            >
+              <option value="climbing">Climbing</option>
+              <option value="lifting">Weightlifting</option>
+              <option value="running">Running</option>
+              <option value="yoga">Yoga</option>
             </select>
           </label>
         </div>
-        <div className="w-[600px]">
-          {movements.map((movement: any, index) => (
-            <MovementBlock key={index} order={index} initivalValue={movement} />
-          ))}
-          <Button type="button" onClick={addSet}>
-            Add Exercise
-          </Button>
-        </div>
+        {activity === "lifting" ? (
+          <div className="w-[600px]">
+            {movements.map((movement: any, index) => (
+              <MovementBlock
+                key={index}
+                order={index}
+                initivalValue={movement}
+              />
+            ))}
+            <Button type="button" onClick={addSet}>
+              Add Exercise
+            </Button>
+          </div>
+        ) : null}
+
         <div className="mb-4">
           <button
             type="submit"
