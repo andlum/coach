@@ -77,22 +77,36 @@ model Exercise {
   equipment EQUIPMENT? // body only, barbell, dumbbell, cable, machine
   mechanic  MECHANIC? // compound, isolation
   force     FORCE? // push, push, legs, hinge,
-  sets      Set[]
+  movements Movement[]
 }
 
 model Routine {
-  id          String    @id @default(cuid())
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id          String     @id @default(cuid())
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId      String
   name        String
   activity    String? // cardio, strength, hiit, lifting, running
   description String?
-  sets        Set[]
+  movements   Movement[]
   workouts    Workout[]
+}
+
+model Movement {
+  id         String   @id @default(cuid())
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId String
+  sets       Set[]
+  // Movements have a polymorphic relationship to routines and wokrout
+  routine    Routine  @relation(fields: [routineId], references: [id])
+  routineId  String
+  workout    Workout? @relation(fields: [workoutId], references: [id])
+  workoutId  String?
 }
 
 model Set {
   id         String   @id @default(cuid())
+  movement   Movement @relation(fields: [movementId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  movementId String
   type       String   @default("working") // warmup, working, dropset, fail
   order      Int
   time       Int? // seconds
@@ -100,25 +114,18 @@ model Set {
   weight     Int?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  exercise   Exercise @relation(fields: [exerciseId], references: [id])
-  exerciseId String
-  // Sets have a polymorphic relationship to routines and wokrout
-  routine    Routine  @relation(fields: [routineId], references: [id])
-  routineId  String
-  workout    Workout? @relation(fields: [workoutId], references: [id])
-  workoutId  String?
 }
 
 model Workout {
-  id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id        String     @id @default(cuid())
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId    String
   name      String
   duration  Int
   activity  String? // cardio, strength, hiit, lifting, running
-  sets      Set[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  movements Movement[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   // Workouts can be based off a routine
   routine   Routine? @relation(fields: [routineId], references: [id])

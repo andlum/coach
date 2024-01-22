@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
 import type { MetaFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 
+import { Button } from "@/components/ui/button";
 import { useOptionalUser } from "~/utils";
 
 export const meta: MetaFunction = () => [{ title: "Coach" }];
