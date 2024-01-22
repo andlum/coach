@@ -28,6 +28,7 @@ export async function searchExercises(query?: string) {
       slug: true,
       name: true,
       target: true,
+      scheme: true,
     },
     where: {
       name: { contains: query },

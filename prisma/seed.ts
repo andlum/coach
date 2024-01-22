@@ -1,9 +1,45 @@
 import fs from "fs";
 
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, MECHANIC, EQUIPMENT, FORCE } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
+
+// convert force string to FORCE enum
+function getForce(force: string) {
+  switch (force) {
+    case "push":
+      return FORCE.PUSH;
+    case "pull":
+      return FORCE.PULL;
+    case "legs":
+      return FORCE.LEGS;
+    default:
+      return null;
+  }
+}
+
+// convert equipment string to EQUIPMENT enum
+function getEquipment(equipment: string) {
+  switch (equipment) {
+    case "barbell":
+      return EQUIPMENT.BARBELL;
+    case "dumbbell":
+      return EQUIPMENT.DUMBBELL;
+    case "body only":
+      return EQUIPMENT.BODYWEIGHT;
+    case "cable":
+      return EQUIPMENT.CABLE;
+    case "kettlebells":
+      return EQUIPMENT.DUMBBELL;
+    case "machine":
+      return EQUIPMENT.MACHINE;
+    case "bands":
+      return EQUIPMENT.BANDS;
+    default:
+      return null;
+  }
+}
 
 async function seedExercises() {
   // Remove existing exercises
@@ -11,23 +47,28 @@ async function seedExercises() {
   console.log("Deleted records in exercise table");
 
   const exercises = JSON.parse(
-    fs.readFileSync("prisma/seeds/exercises.json", "utf8")
+    fs.readFileSync("prisma/seeds/exercises.json", "utf8"),
   );
 
   try {
     console.log("Start seeding exercise data...");
-
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exercises.forEach(async (exercise: any) => {
       await prisma.exercise.create({
         data: {
           name: exercise.name,
-          slug: exercise.id,
-          force: exercise.force,
-          mechanic: exercise.mechanic,
-          equipment: exercise.equipment,
-          target: { primary: exercise.primaryMuscles, secondary: exercise.secondaryMuscles },
+          slug: exercise.id.toLowerCase(),
+          force: getForce(exercise.force),
+          mechanic:
+            exercise.mechanic === "compound"
+              ? MECHANIC.COMPOUND
+              : MECHANIC.ISOLATION,
+          equipment: getEquipment(exercise.equipment),
+          target: {
+            primary: exercise.primaryMuscles,
+            secondary: exercise.secondaryMuscles,
+          },
         },
       });
 
