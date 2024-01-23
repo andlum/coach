@@ -1,4 +1,4 @@
-import type { Routine, User } from "@prisma/client";
+import type { Movement, Routine, User } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
@@ -39,15 +39,20 @@ export function createRoutine({
   description,
   movements,
   userId,
-}: Pick<Routine, "name" | "activity" | "description" | "sets"> & {
+}: Pick<Routine, "name" | "activity" | "description"> & {
   userId: User["id"];
+  movements: Movement[];
 }) {
   return prisma.routine.create({
     data: {
       name,
       activity,
       description,
-      movements,
+      movements: {
+        createMany: {
+          data: movements,
+        },
+      },
       user: {
         connect: {
           id: userId,
