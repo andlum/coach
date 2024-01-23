@@ -82,8 +82,8 @@ model Exercise {
 
 model Routine {
   id          String     @id @default(cuid())
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId      String
+  user        User?      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId      String? // null if public
   name        String
   activity    String? // cardio, strength, hiit, lifting, running
   description String?
