@@ -47,10 +47,13 @@ enum SCHEME {
 
 enum EQUIPMENT {
   BODYWEIGHT
+  BODYWEIGHT_PLUS
   BARBELL
   DUMBBELL
   CABLE
+  ASSISTED
   MACHINE
+  SMITH
   BANDS
 }
 
@@ -73,7 +76,7 @@ model Exercise {
   slug      String     @unique
   name      String
   scheme    SCHEME? // Reps, Reps x Weight, Time
-  target    Json? // muscle groups
+  target    Json? // chest, back, arms(triceps, forearms), biceps, shoulders, legs (quads, glutes, hamstrings, calves), abs/core, other, olympic, full body, cardio
   equipment EQUIPMENT? // body only, barbell, dumbbell, cable, machine
   mechanic  MECHANIC? // compound, isolation
   force     FORCE? // push, push, legs, hinge,
@@ -92,15 +95,15 @@ model Routine {
 }
 
 model Movement {
-  id         String   @id @default(cuid())
-  exercise   Exercise @relation(fields: [exerciseId], references: [id])
-  exerciseId String
-  sets       Set[]
-  // Movements have a polymorphic relationship to routines and wokrout
-  routine    Routine  @relation(fields: [routineId], references: [id])
-  routineId  String
-  workout    Workout? @relation(fields: [workoutId], references: [id])
-  workoutId  String?
+  id        String   @id @default(cuid())
+  exercise  Exercise @relation(fields: [slug], references: [slug])
+  slug      String
+  sets      Set[]
+  // Movements have a polymorphic relationship to routines and workout
+  routine   Routine? @relation(fields: [routineId], references: [id])
+  routineId String?
+  workout   Workout? @relation(fields: [workoutId], references: [id])
+  workoutId String?
 }
 
 model Set {
@@ -109,9 +112,7 @@ model Set {
   movementId String
   type       String   @default("working") // warmup, working, dropset, fail
   order      Int
-  time       Int? // seconds
-  reps       Int?
-  weight     Int?
+  value      Json? // { reps: 10, weight: { value: 100, unit: lb}, time: 60, variation: { name: paused, pause: 2} }
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

@@ -2,6 +2,7 @@ import type { Movement } from "@prisma/client";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
+import qs from "qs";
 import { useState } from "react";
 import { z } from "zod";
 
@@ -11,16 +12,14 @@ import { createRoutine } from "~/models/routine.server";
 import { requireUserId } from "~/session.server";
 
 const setSchema = z.object({
-  exerciseId: z.string(),
-  type: z.string(),
-  order: z.number(),
-  time: z.number(),
-  reps: z.number(),
-  weight: z.number(),
+  // type: z.string(),
+  time: z.string().optional(),
+  reps: z.string().optional(),
+  weight: z.string().optional(),
 });
 
 const movementSchema = z.object({
-  exericseId: z.string(),
+  slug: z.string(),
   sets: z.array(setSchema),
 });
 
@@ -33,16 +32,16 @@ const routineSchema = z.object({
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
-  const formData = Object.fromEntries(await request.formData());
+  const formData = qs.parse(await request.text());
 
   const parsed = await routineSchema.safeParse(formData);
 
   if (!parsed.success) {
-    return json({ error: parsed.error.format() });
+    console.log(await parsed.error);
+    return json({ error: await parsed.error.format() });
   }
 
   const newRoutine = parsed.data;
-  console.log(newRoutine);
 
   const routine = await createRoutine({
     ...newRoutine,
@@ -93,11 +92,11 @@ export default function NewRoutinePage() {
           </label>
           {activity === "lifting" ? (
             <div className="w-[600px]">
-              {movements.map((movement: any, index) => (
+              {movements.map((movement: Partial<Movement>, index) => (
                 <MovementBlock
+                  name={`movements[${index}]`}
                   key={index}
-                  order={index}
-                  initivalValue={movement}
+                  initialValue={movement}
                 />
               ))}
               <Button type="button" onClick={addSet}>

@@ -1,15 +1,15 @@
 import type { Movement } from "@prisma/client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import SetRow from "~/components/SetRow";
 import { ExerciseSelect } from "~/routes/api.exercises";
 
 export default function MovementBlock({
-  order,
+  name,
   initivalValue,
 }: {
-  order: number;
+  name: string;
   initialValue?: Partial<Movement>;
 }) {
   const [exercise, setExercise] = useState<any>(initivalValue?.exercise);
@@ -22,9 +22,15 @@ export default function MovementBlock({
   return exercise ? (
     <div>
       <h2>{exercise?.name}</h2>
+      <input type="hidden" name={`${name}[slug]`} value={exercise?.slug} />
       <div>
         {sets.map((row, i) => (
-          <SetRow key={i} scheme={exercise?.scheme} />
+          <SetRow
+            key={i}
+            name={`${name}[sets][${i}]`}
+            scheme={exercise?.scheme}
+            order={i + 1}
+          />
         ))}
       </div>
       <Button onClick={() => setSets((prev) => [...prev, {}])}>Add Set</Button>

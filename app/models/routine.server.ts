@@ -33,7 +33,7 @@ export function getRoutines({ userId }: { userId: User["id"] }) {
   });
 }
 
-export function createRoutine({
+export async function createRoutine({
   name,
   activity,
   description,
@@ -41,16 +41,24 @@ export function createRoutine({
   userId,
 }: Pick<Routine, "name" | "activity" | "description"> & {
   userId: User["id"];
-  movements: Movement[];
+  movements: Partial<Movement>[];
 }) {
-  return prisma.routine.create({
+  // Create routine
+  // Create movements for routine
+  // Create sets for each movement in the routine
+
+  console.log(movements);
+  // TODO: trouble creating sets
+  const routine = await prisma.routine.create({
     data: {
       name,
       activity,
       description,
       movements: {
         createMany: {
-          data: movements,
+          data: movements.map((movement) => ({
+            slug: movement.slug || "", // Ensure slug is of type string
+          })),
         },
       },
       user: {
@@ -59,5 +67,10 @@ export function createRoutine({
         },
       },
     },
+    include: {
+      movements: true,
+    },
   });
+
+  return routine;
 }
