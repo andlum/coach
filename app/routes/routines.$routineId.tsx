@@ -29,8 +29,17 @@ export default function RoutinesPage() {
       <p>{routine.activity}</p>
       {routine.movements.map((movement, i) => {
         return (
-          <div key={i}>
-            <h3>{movement.exercise.name}</h3>
+          <div key={i} className="w-80">
+            <h3 className="font-bold">{movement.exercise.name}</h3>
+            {movement.sets.map((set, i) => {
+              return (
+                <div key={i} className="grid grid-cols-3 col-gap-2">
+                  <div>{i + 1}</div>
+                  <div>{set.value?.reps} x </div>
+                  <div>{set.value?.weight} lbs</div>
+                </div>
+              );
+            })}
           </div>
         );
       })}
