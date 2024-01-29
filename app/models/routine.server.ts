@@ -14,7 +14,7 @@ export function getRoutine({
       name: true,
       activity: true,
       description: true,
-      movements: true,
+      movements: { select: { exercise: true } },
     },
     where: { id, userId },
   });
@@ -43,9 +43,9 @@ export async function createRoutine({
   userId: User["id"];
   movements: Partial<Movement>[];
 }) {
-  // Create routine
-  // Create movements for routine
-  // Create sets for each movement in the routine
+  // TODO: Do the following inside a transaction
+  // Create routine + movements for routine
+  // Create all sets for each movement
 
   console.log(movements);
   // TODO: trouble creating sets

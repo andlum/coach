@@ -17,13 +17,10 @@ export default function RoutinesPage() {
   const { routines } = useLoaderData<typeof loader>();
 
   return (
-    <div>
-      <header>
+    <div className="grid grid-cols-[300px_auto] grid-rows-2">
+      <header className="grid col-span-2">
         <h1>Routines</h1>
       </header>
-      <main>
-        <Outlet />
-      </main>
       <aside>
         <ul>
           {routines.map((routine) => {
@@ -38,6 +35,9 @@ export default function RoutinesPage() {
           </li>
         </ul>
       </aside>
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
 }

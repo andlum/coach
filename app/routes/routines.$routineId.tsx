@@ -20,9 +20,20 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 export default function RoutinesPage() {
   const { routine } = useLoaderData<typeof loader>();
 
+  console.log(routine);
+
   return (
     <div>
-      View Page for {routine.name}(id: {routine.id})
+      <h1>{routine.name}</h1>
+      <span>(id: {routine.id})</span>
+      <p>{routine.activity}</p>
+      {routine.movements.map((movement, i) => {
+        return (
+          <div key={i}>
+            <h3>{movement.exercise.name}</h3>
+          </div>
+        );
+      })}
     </div>
   );
 }
