@@ -17,7 +17,7 @@ export default function RoutinesPage() {
   const { routines } = useLoaderData<typeof loader>();
 
   return (
-    <div className="grid grid-cols-[300px_auto] grid-rows-2">
+    <div className="grid grid-cols-[300px_auto] grid-rows-[60px_auto]">
       <header className="grid col-span-2">
         <h1>Routines</h1>
       </header>

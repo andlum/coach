@@ -14,7 +14,7 @@ export function getRoutine({
       name: true,
       activity: true,
       description: true,
-      movements: { select: { exercise: true } },
+      movements: { select: { exercise: true, sets: true } },
     },
     where: { id, userId },
   });
@@ -33,6 +33,7 @@ export function getRoutines({ userId }: { userId: User["id"] }) {
   });
 }
 
+// TODO: Move this into a Service method
 export async function createRoutine({
   name,
   activity,
@@ -43,12 +44,6 @@ export async function createRoutine({
   userId: User["id"];
   movements: Partial<Movement>[];
 }) {
-  // TODO: Do the following inside a transaction
-  // Create routine + movements for routine
-  // Create all sets for each movement
-
-  console.log(movements);
-  // TODO: trouble creating sets
   const routine = await prisma.routine.create({
     data: {
       name,
@@ -71,6 +66,28 @@ export async function createRoutine({
       movements: true,
     },
   });
+
+  // Create all sets for each movement
+  let working_sets: any[] = [];
+
+  await movements.forEach((movement) => {
+    if (movement?.sets.length > 0) {
+      const sets = movement.sets.map(({ type, ...values }, i) => ({
+        movementId: routine.movements[i].id, // should map to order on Routine
+        type: type,
+        order: i,
+        value: {
+          ...values,
+        },
+      }));
+      console.log("sets for movement", sets);
+
+      working_sets = working_sets.concat(sets);
+    }
+  });
+
+  // Note: createMany returns a count
+  await prisma.set.createMany({ data: working_sets });
 
   return routine;
 }
