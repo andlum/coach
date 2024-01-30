@@ -92,3 +92,12 @@ export async function createRoutine({
 
   return routine;
 }
+
+export async function deleteRoutine({
+  id,
+  userId,
+}: Pick<Routine, "id"> & { userId: User["id"] }) {
+  return prisma.routine.delete({
+    where: { id, userId },
+  });
+}

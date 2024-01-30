@@ -1,4 +1,4 @@
-import type { Workout, User } from "@prisma/client";
+import type { Workout, User, Movement } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
@@ -14,7 +14,7 @@ export function getWorkout({
       name: true,
       activity: true,
       duration: true,
-      sets: true,
+      movements: { select: { exercise: true, sets: true } },
     },
     where: { id, userId },
   });
@@ -37,15 +37,31 @@ export function createWorkout({
   name,
   activity,
   duration,
-  sets,
+  movements,
   userId,
-}: Pick<Workout, "name" | "activity" | "duration" | "sets" | "userId">) {
+  routineId,
+}: Pick<Workout, "name" | "activity" | "duration" | "routineId"> & {
+  userId: User["id"];
+  movements: Partial<Movement>[];
+}) {
+  if (!userId) throw new Error("User ID is required to create a workout");
+
   return prisma.workout.create({
     data: {
+      // TODO: Fix issue with required userId
       name,
       activity,
       duration,
-      sets,
+      routineId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      movements: {
+        createMany: {
+          data: movements.map((movement) => ({
+            slug: movement.slug || "", // Ensure slug is of type string
+          })),
+        },
+      },
       user: {
         connect: {
           id: userId,
