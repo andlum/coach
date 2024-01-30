@@ -44,6 +44,7 @@ export async function createRoutine({
   userId: User["id"];
   movements: Partial<Movement>[];
 }) {
+  console.log(movements);
   const routine = await prisma.routine.create({
     data: {
       name,
@@ -70,10 +71,10 @@ export async function createRoutine({
   // Create all sets for each movement
   let working_sets: any[] = [];
 
-  await movements.forEach((movement) => {
+  await movements.forEach((movement, movementIdx) => {
     if (movement?.sets.length > 0) {
       const sets = movement.sets.map(({ type, ...values }, i) => ({
-        movementId: routine.movements[i].id, // should map to order on Routine
+        movementId: routine.movements[movementIdx]?.id, // should map to order on Routine
         type: type,
         order: i,
         value: {

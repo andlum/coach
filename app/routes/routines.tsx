@@ -2,6 +2,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 
+import Header from "~/layout/Header";
 import { getRoutines } from "~/models/routine.server";
 import { requireUserId } from "~/session.server";
 
@@ -18,9 +19,7 @@ export default function RoutinesPage() {
 
   return (
     <div className="grid grid-cols-[300px_auto] grid-rows-[60px_auto]">
-      <header className="grid col-span-2">
-        <h1>Routines</h1>
-      </header>
+      <Header className="col-span-2" />
       <aside>
         <ul>
           {routines.map((routine) => {

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import MovementBlock from "~/components/MovementBlock";
 import { createRoutine } from "~/models/routine.server";
 import { requireUserId } from "~/session.server";
+import ActivitySelect from "~/components/ActivitySelect";
 
 const setSchema = z.object({
   // type: z.string(),
@@ -63,33 +64,20 @@ export default function NewRoutinePage() {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold">New Routine</h2>
+    <div className="p-8">
       <Form method="post">
-        <fieldset>
-          <label>
-            <span>Name: </span>
-            <input type="text" name="name" />
-          </label>
+        <fieldset className="flex flex-col">
+          <input
+            className="text-2xl font-bold"
+            type="text"
+            name="name"
+            placeholder="New Routine"
+          />
           <label>
             <span>Description: </span>
             <textarea name="description" />
           </label>
-          <label>
-            <span>Activity: </span>
-            <select
-              name="activity"
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                setActivity(e.target.value)
-              }
-              defaultValue={activity}
-            >
-              <option value="climbing">Climbing</option>
-              <option value="lifting">Weightlifting</option>
-              <option value="running">Running</option>
-              <option value="yoga">Yoga</option>
-            </select>
-          </label>
+          <ActivitySelect onChange={setActivity} />
           {activity === "lifting" ? (
             <div className="w-[600px]">
               {movements.map((movement: Partial<Movement>, index) => (
@@ -108,7 +96,7 @@ export default function NewRoutinePage() {
 
         <button
           type="submit"
-          className="inline-block px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+          className="inline-block px-4 py-2 mt-6 text-white bg-blue-600 rounded-md hover:bg-blue-700"
         >
           Create
         </button>

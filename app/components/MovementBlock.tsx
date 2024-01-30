@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import SetRow from "~/components/SetRow";
 import { ExerciseSelect } from "~/routes/api.exercises";
+import MovementForm from "./MovementForm";
 
 export default function MovementBlock({
   name,
@@ -20,20 +21,10 @@ export default function MovementBlock({
   };
 
   return exercise ? (
-    <div>
-      <h2>{exercise?.name}</h2>
+    <div className="mt-6">
+      <h2 className="font-bold">{exercise?.name}</h2>
       <input type="hidden" name={`${name}[slug]`} value={exercise?.slug} />
-      <div>
-        {sets.map((row, i) => (
-          <SetRow
-            key={i}
-            name={`${name}[sets][${i}]`}
-            scheme={exercise?.scheme}
-            order={i + 1}
-          />
-        ))}
-      </div>
-      <Button onClick={() => setSets((prev) => [...prev, {}])}>Add Set</Button>
+      <MovementForm scheme={exercise?.scheme} name={name} />
     </div>
   ) : (
     <ExerciseSelect onSelect={handleSelect} />
