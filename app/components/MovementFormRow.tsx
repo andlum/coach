@@ -6,6 +6,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 export interface SetValue {
   reps: number;
   weight: number;
+  time: number;
   unit: "kg" | "lbs" | "seconds";
   variation: string;
 }
@@ -23,13 +24,13 @@ export default function MovementFormRow({
 }) {
   return (
     <TableRow>
-      <TableCell>{order}</TableCell>
+      <TableCell className="text-center">{order}</TableCell>
       {scheme === SCHEME.REPS || scheme === SCHEME.TIME ? null : (
         <TableCell>
           <Input
-            className="w-20"
+            className="w-20 mx-auto"
             type="number"
-            value={value?.weight}
+            defaultValue={value?.weight}
             name={`${name}[weight]`}
             min="0"
           />
@@ -37,11 +38,23 @@ export default function MovementFormRow({
       )}
       {scheme === SCHEME.TIME ? (
         <TableCell>
-          <Input type="number" min="0" name={`${name}[time]`} />
+          <Input
+            className="w-20 mx-auto"
+            type="number"
+            min="0"
+            name={`${name}[time]`}
+            defaultValue={value?.time}
+          />
         </TableCell>
       ) : (
         <TableCell>
-          <Input type="number" min="0" name={`${name}[reps]`} />
+          <Input
+            className="w-20 mx-auto"
+            type="number"
+            min="0"
+            defaultValue={value?.reps}
+            name={`${name}[reps]`}
+          />
         </TableCell>
       )}
     </TableRow>

@@ -1,7 +1,8 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
+import ActivityForm, { Activity } from "~/components/ActivityForm";
 import { getRoutine } from "~/models/routine.server";
 import { requireUserId } from "~/session.server";
 
@@ -23,26 +24,16 @@ export default function RoutinesPage() {
   console.log(routine);
 
   return (
-    <div>
-      <h1>{routine.name}</h1>
-      <span>(id: {routine.id})</span>
-      <p>{routine.activity}</p>
-      {routine.movements.map((movement, i) => {
-        return (
-          <div key={i} className="w-80">
-            <h3 className="font-bold">{movement.exercise.name}</h3>
-            {movement.sets.map((set, i) => {
-              return (
-                <div key={i} className="grid grid-cols-3 col-gap-2">
-                  <div>{i + 1}</div>
-                  <div>{set.value?.reps} x </div>
-                  <div>{set.value?.weight} lbs</div>
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
+    <div className="p-8">
+      <Form method="post">
+        <ActivityForm initialValues={routine as Activity} />
+        <button
+          type="submit"
+          className="inline-block px-4 py-2 mt-6 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+        >
+          Update
+        </button>
+      </Form>
     </div>
   );
 }

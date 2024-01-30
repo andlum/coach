@@ -11,16 +11,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import MovementFormRow from "./MovementFormRow";
 
 export default function MovementForm({
   name,
   scheme,
+  initialSets,
 }: {
   name?: string;
-  scheme: SCHEME;
+  scheme?: SCHEME | null;
+  initialSets?: Set[];
 }) {
-  const [sets, setSets] = useState<any[]>([{}]);
+  const [sets, setSets] = useState<any[]>(initialSets || [{}]);
 
   return (
     <Table>
@@ -44,12 +47,13 @@ export default function MovementForm({
               name={`${name}[sets][${i}]`}
               order={i + 1}
               scheme={scheme}
+              value={set.value}
             />
           );
         })}
       </TableBody>
       <TableFooter>
-        <TableRow>
+        <TableRow className="p-2">
           <TableCell colSpan={3} className="text-right ">
             <Button
               className="w-full"

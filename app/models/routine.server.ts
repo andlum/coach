@@ -1,4 +1,4 @@
-import type { Movement, Routine, User } from "@prisma/client";
+import type { Movement, Routine, User, Set } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
@@ -14,7 +14,18 @@ export function getRoutine({
       name: true,
       activity: true,
       description: true,
-      movements: { select: { exercise: true, sets: true } },
+      movements: {
+        select: {
+          exercise: true,
+          sets: {
+            select: {
+              type: true,
+              order: true,
+              value: true,
+            },
+          },
+        },
+      },
     },
     where: { id, userId },
   });
@@ -42,9 +53,11 @@ export async function createRoutine({
   userId,
 }: Pick<Routine, "name" | "activity" | "description"> & {
   userId: User["id"];
-  movements: Partial<Movement>[];
+  movements: {
+    slug: Movement["slug"];
+    sets: Set[];
+  }[];
 }) {
-  console.log(movements);
   const routine = await prisma.routine.create({
     data: {
       name,
@@ -69,19 +82,18 @@ export async function createRoutine({
   });
 
   // Create all sets for each movement
-  let working_sets: any[] = [];
+  let working_sets: Partial<Set>[] = [];
 
-  await movements.forEach((movement, movementIdx) => {
+  movements.forEach((movement, movementIdx) => {
     if (movement?.sets.length > 0) {
       const sets = movement.sets.map(({ type, ...values }, i) => ({
-        movementId: routine.movements[movementIdx]?.id, // should map to order on Routine
+        movementId: routine.movements[movementIdx].id, // should map to order on Routine
         type: type,
         order: i,
         value: {
           ...values,
         },
       }));
-      console.log("sets for movement", sets);
 
       working_sets = working_sets.concat(sets);
     }

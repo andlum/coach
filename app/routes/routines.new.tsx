@@ -7,10 +7,11 @@ import { useState } from "react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import ActivitySelect from "~/components/ActivitySelect";
 import MovementBlock from "~/components/MovementBlock";
 import { createRoutine } from "~/models/routine.server";
 import { requireUserId } from "~/session.server";
-import ActivitySelect from "~/components/ActivitySelect";
+import ActivityForm from "~/components/ActivityForm";
 
 const setSchema = z.object({
   // type: z.string(),
@@ -56,44 +57,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function NewRoutinePage() {
   // const actionData = useActionData<typeof action>();
 
-  const [activity, setActivity] = useState<string>("lifting"); // ["Lifting", "Running", "Climbing", "Yoga"
-  const [movements, setMovements] = useState<Partial<Movement>[]>([]);
-
-  const addSet = () => {
-    setMovements((prev) => [...prev, {}]);
-  };
-
   return (
     <div className="p-8">
       <Form method="post">
-        <fieldset className="flex flex-col">
-          <input
-            className="text-2xl font-bold"
-            type="text"
-            name="name"
-            placeholder="New Routine"
-          />
-          <label>
-            <span>Description: </span>
-            <textarea name="description" />
-          </label>
-          <ActivitySelect onChange={setActivity} />
-          {activity === "lifting" ? (
-            <div className="w-[600px]">
-              {movements.map((movement: Partial<Movement>, index) => (
-                <MovementBlock
-                  name={`movements[${index}]`}
-                  key={index}
-                  initialValue={movement}
-                />
-              ))}
-              <Button type="button" onClick={addSet}>
-                Add Exercise
-              </Button>
-            </div>
-          ) : null}
-        </fieldset>
-
+        <ActivityForm />
         <button
           type="submit"
           className="inline-block px-4 py-2 mt-6 text-white bg-blue-600 rounded-md hover:bg-blue-700"
