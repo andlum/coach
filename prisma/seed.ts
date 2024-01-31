@@ -1,6 +1,12 @@
 import fs from "fs";
 
-import { PrismaClient, MECHANIC, EQUIPMENT, FORCE } from "@prisma/client";
+import {
+  PrismaClient,
+  MECHANIC,
+  EQUIPMENT,
+  FORCE,
+  SCHEME,
+} from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -55,6 +61,16 @@ async function seedExercises() {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exercises.forEach(async (exercise: any) => {
+      const schemes: SCHEME[] = [SCHEME.REPS];
+
+      if (
+        ["barbell", "dumbbell", "kettlebells", "machine", "cable"].includes(
+          exercise?.equipment,
+        )
+      ) {
+        schemes.push(SCHEME.WEIGHT);
+      }
+
       await prisma.exercise.create({
         data: {
           name: exercise.name,
@@ -69,6 +85,7 @@ async function seedExercises() {
             primary: exercise.primaryMuscles,
             secondary: exercise.secondaryMuscles,
           },
+          schemes,
         },
       });
 

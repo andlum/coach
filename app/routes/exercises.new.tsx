@@ -8,7 +8,7 @@ import { createExercise } from "~/models/exercise.server";
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const name = formData.get("name");
-  const scheme = formData.get("scheme");
+  const schemes = formData.get("schemes");
   const force = formData.get("force");
   const equipment = formData.get("equipment");
   const mechanic = formData.get("mechanic");
@@ -17,9 +17,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return json({ errors: { name: "Name is required" } }, { status: 400 });
   }
 
-  if (typeof scheme !== "string" || scheme.length === 0) {
-    return json({ errors: { scheme: "Scheme is required" } }, { status: 400 });
-  }
+  // if (typeof schemes !== "array" || scheme.length === 0) {
+  //   return json({ errors: { scheme: "Scheme is required" } }, { status: 400 });
+  // }
 
   if (typeof force !== "string" || force.length === 0) {
     return json({ errors: { force: "Force is required" } }, { status: 400 });
@@ -41,7 +41,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const exercise = await createExercise({
     name,
-    scheme,
+    schemes,
     force,
     equipment,
     mechanic,
@@ -84,7 +84,7 @@ export default function NewExercisePage() {
             <span>Scheme: </span>
             <select
               ref={schemeRef}
-              name="scheme"
+              name="schemes"
               className="border border-gray-300 rounded px-4 py-2"
             >
               <option value="weight">Reps x Weight</option>

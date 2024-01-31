@@ -1,4 +1,4 @@
-import type { Movement, Routine, User, Set } from "@prisma/client";
+import type { Movement, Routine, User, ExerciseSet } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
@@ -55,7 +55,7 @@ export async function createRoutine({
   userId: User["id"];
   movements: {
     slug: Movement["slug"];
-    sets: Set[];
+    sets: ExerciseSet[];
   }[];
 }) {
   const routine = await prisma.routine.create({

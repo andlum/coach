@@ -14,7 +14,7 @@ export function getExercise({ slug }: Pick<Exercise, "slug">) {
       mechanic: true,
       equipment: true,
       target: true,
-      scheme: true,
+      schemes: true,
     },
     where: { slug },
   });
@@ -28,7 +28,7 @@ export async function searchExercises(query?: string) {
       slug: true,
       name: true,
       target: true,
-      scheme: true,
+      schemes: true,
     },
     where: {
       name: { contains: query },
@@ -48,7 +48,7 @@ export function getExercises() {
       mechanic: true,
       equipment: true,
       target: true,
-      scheme: true,
+      schemes: true,
     },
     orderBy: { name: "asc" },
   });
@@ -56,24 +56,24 @@ export function getExercises() {
 
 export function createExercise({
   name,
-  scheme,
+  schemes,
   force,
   mechanic,
   equipment,
   target,
 }: Pick<
   Exercise,
-  "name" | "scheme" | "force" | "mechanic" | "equipment" | "target"
+  "name" | "schemes" | "force" | "mechanic" | "equipment" | "target"
 >) {
   return prisma.exercise.create({
     data: {
       name,
       slug: name.toLowerCase().replace(/\s/g, "-"),
-      scheme,
+      schemes,
       force,
       mechanic,
       equipment,
-      // target,
+      target: target ? JSON.parse(target as string) : null,
     },
   });
 }

@@ -1,4 +1,4 @@
-import { SCHEME, Set } from "@prisma/client";
+import { SCHEME, ExerciseSet } from "@prisma/client";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -16,12 +16,12 @@ import MovementFormRow from "./MovementFormRow";
 
 export default function MovementForm({
   name,
-  scheme,
+  schemes,
   initialSets,
 }: {
   name?: string;
-  scheme?: SCHEME | null;
-  initialSets?: Set[];
+  schemes?: SCHEME[];
+  initialSets?: ExerciseSet[];
 }) {
   const [sets, setSets] = useState<any[]>(initialSets || [{}]);
 
@@ -30,14 +30,15 @@ export default function MovementForm({
       <TableHeader>
         <TableHead>Set</TableHead>
         {/* <TableHead>Variation</TableHead> */}
-        {scheme === SCHEME.REPS || scheme === SCHEME.TIME ? null : (
-          <TableHead>+lbs</TableHead>
-        )}
-        {scheme === SCHEME.TIME ? (
-          <TableHead>Time</TableHead>
-        ) : (
-          <TableHead>Reps</TableHead>
-        )}
+        {schemes?.map((scheme) => <TableHead key={scheme}>{scheme}</TableHead>)}
+        {/* // {scheme === SCHEME.REPS || scheme === SCHEME.TIME ? null : (
+        //   <TableHead>+lbs</TableHead>
+        // )}
+        // {scheme === SCHEME.TIME ? (
+        //   <TableHead>Time</TableHead>
+        // ) : (
+        //   <TableHead>Reps</TableHead>
+        // )} */}
       </TableHeader>
       <TableBody>
         {sets.map((set, i) => {
@@ -46,7 +47,7 @@ export default function MovementForm({
               key={i}
               name={`${name}[sets][${i}]`}
               order={i + 1}
-              scheme={scheme}
+              schemes={schemes}
               value={set.value}
             />
           );

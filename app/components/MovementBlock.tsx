@@ -1,4 +1,4 @@
-import type { Exercise, Movement, Set } from "@prisma/client";
+import type { Exercise, Movement, ExerciseSet } from "@prisma/client";
 import { useState } from "react";
 
 import { ExerciseSelect } from "~/routes/api.exercises";
@@ -10,7 +10,10 @@ export default function MovementBlock({
   initialValue,
 }: {
   name: string;
-  initialValue?: Partial<Movement> & { exercise: Exercise; sets: Set[] };
+  initialValue?: Partial<Movement> & {
+    exercise: Exercise;
+    sets: ExerciseSet[];
+  };
 }) {
   console.log(initialValue);
   const [exercise, setExercise] = useState<Partial<Exercise>>(
@@ -27,7 +30,7 @@ export default function MovementBlock({
       <input type="hidden" name={`${name}[slug]`} value={exercise?.slug} />
       <MovementForm
         name={name}
-        scheme={exercise?.scheme}
+        schemes={exercise?.schemes}
         initialSets={initialValue?.sets}
       />
     </div>

@@ -14,18 +14,18 @@ export interface SetValue {
 export default function MovementFormRow({
   name,
   order,
-  scheme,
+  schemes,
   value,
 }: {
   name?: string;
-  scheme: SCHEME;
+  schemes: SCHEME[];
   order?: number;
   value?: SetValue;
 }) {
   return (
     <TableRow>
       <TableCell className="text-center">{order}</TableCell>
-      {scheme === SCHEME.REPS || scheme === SCHEME.TIME ? null : (
+      {schemes.includes(SCHEME.WEIGHT) ? (
         <TableCell>
           <Input
             className="w-20 mx-auto"
@@ -35,8 +35,8 @@ export default function MovementFormRow({
             min="0"
           />
         </TableCell>
-      )}
-      {scheme === SCHEME.TIME ? (
+      ) : null}
+      {schemes.includes(SCHEME.TIME) ? (
         <TableCell>
           <Input
             className="w-20 mx-auto"
@@ -46,7 +46,8 @@ export default function MovementFormRow({
             defaultValue={value?.time}
           />
         </TableCell>
-      ) : (
+      ) : null}
+      {schemes.includes(SCHEME.REPS) ? (
         <TableCell>
           <Input
             className="w-20 mx-auto"
@@ -56,7 +57,7 @@ export default function MovementFormRow({
             name={`${name}[reps]`}
           />
         </TableCell>
-      )}
+      ) : null}
     </TableRow>
   );
 }

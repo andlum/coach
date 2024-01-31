@@ -11,7 +11,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ exercises: await searchExercises() });
 };
 
-type ExerciseSelectData = Pick<Exercise, "name" | "slug" | "scheme">;
+type ExerciseSelectData = Pick<Exercise, "name" | "slug" | "schemes">;
 
 export const ExerciseSelect = ({
   onSelect,

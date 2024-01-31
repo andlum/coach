@@ -26,7 +26,7 @@ export default function ExerciseDetailsPage() {
         <dt>Target</dt>
         <dd>{JSON.stringify(exercise.target)}</dd>
         <dt>Scheme</dt>
-        <dd>{exercise.scheme}</dd>
+        <dd>{exercise.schemes.join(" x ")}</dd>
         <dt>Mechanic</dt>
         <dd>{exercise.mechanic}</dd>
         <dt>Force</dt>
