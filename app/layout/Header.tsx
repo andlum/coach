@@ -1,3 +1,5 @@
+import { Link } from "@remix-run/react";
+
 import { cn } from "@/lib/utils";
 import { useOptionalUser } from "~/utils";
 
@@ -7,24 +9,28 @@ export default function Header({ className }: { className?: string }) {
   return (
     <header
       className={cn(
-        "w-full flex items-center justify-evenly content-end p-4 bg-gray-800 text-white",
+        "w-full flex items-end justify-between content-end p-4 ",
         className,
       )}
     >
-      <h1 className="text-3xl font-bold">Coach</h1>
+      <h1 className="text-3xl font-bold text-primary">Coach</h1>
       <nav>
-        <ul className="flex flex-row space-x-4">
+        <ul className="flex flex-row space-x-4 font-medium">
           <li>
-            <a href="/routines">Routines</a>
+            <Link to="/routines">Routines</Link>
           </li>
           <li>
-            <a href="/workouts">Workouts</a>
+            <Link to="/workouts">Workouts</Link>
           </li>
           <li>
-            <a href="/exercises">Exercises</a>
+            <Link to="/exercises">Exercises</Link>
           </li>
           <li>
-            {user ? <a href="/logout">Logout</a> : <a href="/login">Login</a>}
+            {user ? (
+              <Link to="/logout">Logout</Link>
+            ) : (
+              <Link to="/login">Login</Link>
+            )}
           </li>
         </ul>
       </nav>

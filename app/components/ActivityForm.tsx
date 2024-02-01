@@ -74,9 +74,6 @@ export default function WorkoutForm({
               initialSets={movement?.sets}
             />
           ))}
-          {/* <Button type="button" onClick={addExercise}>
-            Add Exercises
-          </Button> */}
           <ExerciseModal onAdd={addMovements} />
         </div>
       ) : null}

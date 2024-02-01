@@ -61,12 +61,9 @@ export default function NewRoutinePage() {
     <div className="p-8">
       <Form method="post">
         <ActivityForm />
-        <button
-          type="submit"
-          className="inline-block px-4 py-2 mt-6 text-white bg-blue-600 rounded-md hover:bg-blue-700"
-        >
+        <Button type="submit" className="inline-block mt-6">
           Create
-        </button>
+        </Button>
       </Form>
     </div>
   );
