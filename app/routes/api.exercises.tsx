@@ -18,8 +18,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export function ExerciseList({
   onSelect,
+  children,
 }: {
   onSelect?: (exercise: ExerciseSelectData) => void;
+  children: React.ReactNode;
 }) {
   const exercisesFetcher = useFetcher<typeof loader>();
   // Load exercises on initial load
@@ -51,6 +53,7 @@ export function ExerciseList({
 
   return (
     <CommandList className="flex-1">
+      {children}
       {Object.keys(grouped).map((heading) => {
         return (
           <CommandGroup key={heading} heading={heading}>
