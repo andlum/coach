@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -8,9 +9,15 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
+import {
+  PreventFlashOnWrongTheme,
+  ThemeProvider,
+  useTheme,
+} from "remix-themes";
 
-import { getUser } from "~/session.server";
+import { getUser, themeSessionResolver } from "~/session.server";
 import stylesheet from "~/tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -19,16 +26,31 @@ export const links: LinksFunction = () => [
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  return json({ user: await getUser(request) });
+  const { getTheme } = await themeSessionResolver(request);
+
+  return json({ user: await getUser(request), theme: getTheme() });
 };
 
-export default function App() {
+export default function AppWithProviders() {
+  const data = useLoaderData<typeof loader>();
   return (
-    <html lang="en" className="h-full">
+    <ThemeProvider specifiedTheme={data.theme} themeAction="/action/set-theme">
+      <App />
+    </ThemeProvider>
+  );
+}
+
+export function App() {
+  const data = useLoaderData<typeof loader>();
+  const [theme] = useTheme();
+
+  return (
+    <html lang="en" className={cn("h-full", theme)}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
+        <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
         <Links />
       </head>
       <body className="h-full">

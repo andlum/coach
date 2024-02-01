@@ -1,4 +1,5 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
+import { createThemeSessionResolver } from "remix-themes";
 import invariant from "tiny-invariant";
 
 import type { User } from "~/models/user.server";
@@ -16,6 +17,8 @@ export const sessionStorage = createCookieSessionStorage({
     secure: process.env.NODE_ENV === "production",
   },
 });
+
+export const themeSessionResolver = createThemeSessionResolver(sessionStorage);
 
 const USER_SESSION_KEY = "userId";
 

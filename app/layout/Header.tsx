@@ -1,6 +1,7 @@
 import { Link } from "@remix-run/react";
 
 import { cn } from "@/lib/utils";
+import { ModeToggle } from "~/components/ModeToggle";
 import { useOptionalUser } from "~/utils";
 
 export default function Header({ className }: { className?: string }) {
@@ -15,7 +16,7 @@ export default function Header({ className }: { className?: string }) {
     >
       <h1 className="text-3xl font-bold text-primary">Coach</h1>
       <nav>
-        <ul className="flex flex-row space-x-4 font-medium">
+        <ul className="flex flex-row items-center space-x-4 font-medium">
           <li>
             <Link to="/routines">Routines</Link>
           </li>
@@ -31,6 +32,9 @@ export default function Header({ className }: { className?: string }) {
             ) : (
               <Link to="/login">Login</Link>
             )}
+          </li>
+          <li>
+            <ModeToggle />
           </li>
         </ul>
       </nav>
