@@ -21,24 +21,19 @@ export default function MovementForm({
 }: {
   name?: string;
   schemes?: SCHEME[];
-  initialSets?: ExerciseSet[];
+  initialSets?: Partial<ExerciseSet>[];
 }) {
   const [sets, setSets] = useState<any[]>(initialSets || [{}]);
 
   return (
     <Table>
       <TableHeader>
-        <TableHead>Set</TableHead>
-        {/* <TableHead>Variation</TableHead> */}
-        {schemes?.map((scheme) => <TableHead key={scheme}>{scheme}</TableHead>)}
-        {/* // {scheme === SCHEME.REPS || scheme === SCHEME.TIME ? null : (
-        //   <TableHead>+lbs</TableHead>
-        // )}
-        // {scheme === SCHEME.TIME ? (
-        //   <TableHead>Time</TableHead>
-        // ) : (
-        //   <TableHead>Reps</TableHead>
-        // )} */}
+        <TableRow>
+          <TableHead>Set</TableHead>
+          {schemes?.map((scheme) => (
+            <TableHead key={scheme}>{scheme}</TableHead>
+          ))}
+        </TableRow>
       </TableHeader>
       <TableBody>
         {sets.map((set, i) => {
@@ -47,7 +42,7 @@ export default function MovementForm({
               key={i}
               name={`${name}[sets][${i}]`}
               order={i + 1}
-              schemes={schemes}
+              schemes={schemes ?? []}
               value={set.value}
             />
           );

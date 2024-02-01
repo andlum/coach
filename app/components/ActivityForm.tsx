@@ -1,10 +1,16 @@
-import type { Movement } from "@prisma/client";
+import type { Exercise, ExerciseSet } from "@prisma/client";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import type { ExerciseSelectData } from "~/routes/api.exercises";
 
 import ActivitySelect from "./ActivitySelect";
+import ExerciseModal from "./ExerciseModal";
 import MovementBlock from "./MovementBlock";
+
+export interface Movement {
+  exercise: Exercise;
+  sets: Pick<ExerciseSet, "type" | "order" | "value">[];
+}
 
 // Abstract for Routine or Workout
 export interface Activity {
@@ -12,7 +18,7 @@ export interface Activity {
   description: string | null;
   activity: string | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  movements: any[];
+  movements: Movement[];
 }
 
 export default function WorkoutForm({
@@ -21,14 +27,25 @@ export default function WorkoutForm({
   initialValues?: Activity;
 }) {
   const [activity, setActivity] = useState<string>(
-    initialValues?.activity || "Lifting",
-  ); // ["Lifting", "Running", "Climbing", "Yoga"
-  const [movements, setMovements] = useState<Partial<Movement>[]>(
+    initialValues?.activity ?? "lifting",
+  );
+  const [movements, setMovements] = useState<Movement[]>(
     initialValues?.movements || [],
   );
 
-  const addSet = () => {
-    setMovements((prev) => [...prev, {}]);
+  const addMovements = (exercises: ExerciseSelectData[]) => {
+    const newMoves = exercises.map((exercise) => ({
+      exercise,
+      sets: [],
+    }));
+
+    setMovements((prev) => [
+      ...prev,
+      ...newMoves.map((move) => ({
+        exercise: move.exercise as Exercise,
+        sets: move.sets,
+      })),
+    ]);
   };
 
   return (
@@ -53,12 +70,14 @@ export default function WorkoutForm({
             <MovementBlock
               name={`movements[${index}]`}
               key={index}
-              initialValue={movement}
+              exercise={movement?.exercise || {}}
+              initialSets={movement?.sets}
             />
           ))}
-          <Button type="button" onClick={addSet}>
-            Add Exercise
-          </Button>
+          {/* <Button type="button" onClick={addExercise}>
+            Add Exercises
+          </Button> */}
+          <ExerciseModal onAdd={addMovements} />
         </div>
       ) : null}
     </fieldset>
